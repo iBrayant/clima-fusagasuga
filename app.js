@@ -109,7 +109,7 @@ function dibujarGrafico() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, ancho, alto);
 
-  const estiloOscuro = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const estiloOscuro = esTemaOscuro();
   const colorTexto = estiloOscuro ? "rgba(255,255,255,0.5)" : "rgba(60,60,67,0.5)";
   const colorGrilla = estiloOscuro ? "rgba(255,255,255,0.08)" : "rgba(60,60,67,0.08)";
   const colorHistorico = "#0a84ff";
@@ -258,6 +258,37 @@ document.querySelectorAll(".segmento").forEach((boton) => {
     variableActual = boton.dataset.variable;
     dibujarGrafico();
   });
+});
+
+/* -------------------------- Tema claro / oscuro -------------------------- */
+
+function esTemaOscuro() {
+  const forzado = document.documentElement.getAttribute("data-theme");
+  if (forzado === "dark") return true;
+  if (forzado === "light") return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function aplicarTema(tema) {
+  if (tema) {
+    document.documentElement.setAttribute("data-theme", tema);
+    localStorage.setItem("tema", tema);
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.removeItem("tema");
+  }
+  if (datos) dibujarGrafico();
+}
+
+const botonTema = el("boton-tema");
+if (botonTema) {
+  botonTema.addEventListener("click", () => {
+    aplicarTema(esTemaOscuro() ? "light" : "dark");
+  });
+}
+
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+  if (!localStorage.getItem("tema") && datos) dibujarGrafico();
 });
 
 cargarDatos();
