@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/predicciones.py": {
+      "maxDuration": 30,
+      "memory": 1024
+    }
+  }
+}

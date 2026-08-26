@@ -9,64 +9,84 @@ Ingeniería de Sistemas y Computación, curso de Inteligencia Artificial (604566
 
 ## Arquitectura
 
-El proyecto está dividido en dos partes independientes:
+El proyecto está dividido en dos partes:
 
-- **Motor de datos** (`motor/generar_predicciones.py`, Python): obtiene el
+- **Pipeline de datos y modelo** (`motor/pipeline.py`, Python): obtiene el
   histórico climático real de Fusagasugá desde la API de [Open-Meteo](https://open-meteo.com/)
   (con respaldo simulado si la API no responde), aplica las 7 fases de
   limpieza de datos, entrena dos modelos Random Forest (temperatura y
-  precipitación), genera la predicción de los próximos 7 días junto con
-  la recomendación de cultivos, y exporta todo a `motor/predicciones.json`.
-- **Dashboard estático** (`index.html`, `style.css`, `app.js`): lee ese
-  JSON y lo muestra en una interfaz visual. No depende de un servidor:
-  es HTML/CSS/JS puro, desplegable directamente en Vercel como sitio estático.
+  precipitación), y genera la predicción de los próximos 7 días junto con
+  la recomendación de cultivos.
+- **Dashboard** (`index.html`, `style.css`, `app.js`): interfaz visual que
+  consume ese resultado y lo muestra. No hace ningún cálculo por su cuenta.
 
-Esta separación evita depender de un servidor Python corriendo de forma
-permanente (como requeriría Dash) para algo que solo necesita mostrar
-un resultado ya calculado.
+El pipeline se usa de dos formas:
+
+1. **`api/predicciones.py`** — una función serverless de Vercel. Cada vez
+   que el dashboard pide datos (`GET /api/predicciones`), esta función corre
+   el pipeline completo con la fecha real de ese momento y devuelve el JSON.
+   Vercel cachea esa respuesta en su borde (~30 minutos, con una hora extra
+   de gracia), así que con el tráfico bajo de este proyecto casi nunca se
+   vuelve a entrenar el modelo en cada visita, pero el sitio nunca se queda
+   con datos de hace semanas.
+2. **`motor/generar_predicciones.py`** — script de línea de comandos que
+   corre el mismo pipeline y lo escribe a `predicciones.json` en disco. Sirve
+   para regenerar/depurar localmente sin depender de Vercel.
+
+No hay ningún servidor corriendo de forma permanente (como requeriría Dash):
+la función de Vercel se prende, calcula, responde, y se apaga.
 
 ## Estructura
 
 ```
 clima-fusagasuga/
 ├── README.md
+├── vercel.json                     -> config de la funcion serverless (tiempo/memoria)
+├── api/
+│   ├── predicciones.py             -> funcion serverless: GET /api/predicciones
+│   └── requirements.txt            -> dependencias Python de esa funcion
 ├── motor/
-│   ├── generar_predicciones.py   -> script Python: datos + limpieza + modelo + prediccion
-│   └── predicciones.json         -> resultado que consume el dashboard
-├── index.html                    -> pagina principal del dashboard
-├── style.css                     -> estilos
-└── app.js                        -> lee predicciones.json y dibuja el grafico
+│   ├── pipeline.py                 -> datos + limpieza (7 fases) + modelo + recomendacion
+│   └── generar_predicciones.py     -> script CLI para regenerar/depurar localmente
+├── index.html                      -> pagina principal del dashboard
+├── style.css                       -> estilos
+└── app.js                          -> consume /api/predicciones y dibuja el grafico
 ```
 
-## Cómo regenerar las predicciones
+## Cómo probarlo localmente
+
+Instalar dependencias:
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r api/requirements.txt
+```
+
+Opción rápida (solo el pipeline, sin servidor):
 
 ```bash
 cd motor
-python3 -m venv .venv && source .venv/bin/activate
-pip install pandas numpy requests scikit-learn
 python generar_predicciones.py
 ```
 
-Esto sobrescribe `motor/predicciones.json` con datos y predicciones nuevas.
+Esto genera `motor/predicciones.json` con datos y predicciones frescas
+(no lo usa el sitio desplegado, es solo para ver el pipeline correr).
 
-## Cómo ver el dashboard localmente
+Para probar el dashboard completo con la función serverless real, se
+recomienda el CLI de Vercel:
 
 ```bash
-python3 -m http.server 8000
+npm install -g vercel
+vercel dev
 ```
-
-Y abrir `http://localhost:8000` en el navegador.
 
 ## Despliegue en Vercel
 
 1. Subir el repositorio a GitHub.
 2. En [vercel.com](https://vercel.com), **Add New Project** y elegir el repositorio.
-3. Vercel detecta automáticamente que es un sitio estático — no requiere
-   configurar build command ni output directory. Clic en **Deploy**.
+3. Vercel detecta automáticamente el sitio estático y la función Python en
+   `api/` — no requiere configuración adicional. Clic en **Deploy**.
 
-## Actualizar el dashboard con datos más recientes
-
-1. Correr de nuevo `generar_predicciones.py`.
-2. Esto sobrescribe `motor/predicciones.json`.
-3. `git add`, `git commit`, `git push`.
-4. Vercel vuelve a desplegar automáticamente al detectar el cambio.
+Cada vez que alguien visita el sitio, `/api/predicciones` corre con la
+fecha real de ese momento — no hay que regenerar ni volver a desplegar
+manualmente para que la predicción se mantenga vigente.

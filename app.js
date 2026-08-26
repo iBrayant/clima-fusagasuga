@@ -1,9 +1,10 @@
 /* ------------------------------------------------------------------
-   Clima Fusagasugá — lee predicciones.json y dibuja el dashboard.
-   Sin backend: todo el calculo ya vino resuelto en el JSON.
+   Clima Fusagasugá — consume /api/predicciones y dibuja el dashboard.
+   La funcion serverless corre el pipeline (datos + limpieza + modelo)
+   y responde con el resultado; Vercel cachea esa respuesta ~30 min.
    ------------------------------------------------------------------ */
 
-const RUTA_JSON = "motor/predicciones.json";
+const RUTA_API = "/api/predicciones";
 
 let datos = null;
 let variableActual = "temperatura";
@@ -12,7 +13,7 @@ const el = (id) => document.getElementById(id);
 
 async function cargarDatos() {
   try {
-    const respuesta = await fetch(RUTA_JSON, { cache: "no-store" });
+    const respuesta = await fetch(RUTA_API, { cache: "no-store" });
     if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
     datos = await respuesta.json();
     render();
@@ -22,9 +23,9 @@ async function cargarDatos() {
 }
 
 function mostrarError(error) {
-  console.error("No se pudo cargar predicciones.json:", error);
+  console.error("No se pudo cargar /api/predicciones:", error);
   el("subtitulo-actualizacion").textContent =
-    "No se pudieron cargar los datos. Verifica que motor/predicciones.json exista.";
+    "No se pudieron cargar los datos. Intenta recargar en unos segundos.";
   el("lista-cultivos").innerHTML =
     '<li class="cultivo-placeholder">Sin datos disponibles.</li>';
 }
