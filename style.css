@@ -206,10 +206,14 @@ body {
 .panel-grafico h2,
 .panel-cultivos h2,
 .panel-modelo h2 {
-  margin: 0;
+  margin: 0 0 16px;
   font-size: 19px;
   font-weight: 700;
   letter-spacing: -0.01em;
+}
+
+.panel-grafico .panel-encabezado h2 {
+  margin: 0;
 }
 
 /* Control segmentado, estilo iOS */
