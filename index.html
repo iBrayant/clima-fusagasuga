@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clima Fusagasugá</title>
+<meta name="description" content="Dashboard climatológico y agro-predictivo de Fusagasugá">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="fondo-decorativo" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<main class="contenedor">
+
+  <header class="encabezado">
+    <p class="kicker">Fusagasugá · Cundinamarca</p>
+    <h1>Clima &amp; Cultivos</h1>
+    <p class="subtitulo" id="subtitulo-actualizacion">Predicción climatológica y recomendación agrícola</p>
+  </header>
+
+  <section class="tarjetas-kpi" id="tarjetas-kpi" aria-label="Predicción de mañana">
+    <div class="tarjeta vidrio kpi">
+      <span class="kpi-etiqueta">Mañana</span>
+      <span class="kpi-valor" id="kpi-temperatura">—</span>
+      <span class="kpi-detalle" id="kpi-temperatura-oficial"></span>
+    </div>
+    <div class="tarjeta vidrio kpi">
+      <span class="kpi-etiqueta">Lluvia esperada</span>
+      <span class="kpi-valor" id="kpi-precipitacion">—</span>
+      <span class="kpi-detalle" id="kpi-precipitacion-oficial"></span>
+    </div>
+  </section>
+
+  <section class="tarjeta vidrio panel-grafico" aria-label="Histórico y pronóstico">
+    <div class="panel-encabezado">
+      <h2>Histórico vs. pronóstico</h2>
+      <div class="segmentado" role="tablist" aria-label="Variable a mostrar">
+        <button class="segmento activo" data-variable="temperatura" role="tab" aria-selected="true">Temperatura</button>
+        <button class="segmento" data-variable="precipitacion" role="tab" aria-selected="false">Precipitación</button>
+      </div>
+    </div>
+    <div class="grafico-envoltura">
+      <canvas id="grafico" role="img" aria-label="Gráfica de histórico y pronóstico"></canvas>
+    </div>
+    <p class="leyenda-manual">
+      <span><i class="punto punto-historico"></i>Histórico real</span>
+      <span><i class="punto punto-prediccion"></i>Predicción IA</span>
+    </p>
+  </section>
+
+  <section class="tarjeta vidrio panel-cultivos" aria-label="Recomendación de cultivos">
+    <h2>Siembra recomendada para mañana</h2>
+    <ul class="lista-cultivos" id="lista-cultivos">
+      <li class="cultivo-placeholder">Cargando recomendación…</li>
+    </ul>
+  </section>
+
+  <section class="tarjeta vidrio panel-modelo" aria-label="Información del modelo">
+    <h2>Sobre el modelo</h2>
+    <div class="grid-modelo" id="grid-modelo">
+      <div class="dato-modelo">
+        <span class="dato-etiqueta">Algoritmo</span>
+        <span class="dato-valor">Random Forest</span>
+      </div>
+      <div class="dato-modelo">
+        <span class="dato-etiqueta">Fuente de datos</span>
+        <span class="dato-valor" id="dato-fuente">—</span>
+      </div>
+      <div class="dato-modelo">
+        <span class="dato-etiqueta">Registros usados</span>
+        <span class="dato-valor" id="dato-registros">—</span>
+      </div>
+      <div class="dato-modelo">
+        <span class="dato-etiqueta">Error medio (temp.)</span>
+        <span class="dato-valor" id="dato-mae">—</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="pie">
+    <p>Universidad de Cundinamarca — Seccional Fusagasugá · Inteligencia Artificial</p>
+  </footer>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

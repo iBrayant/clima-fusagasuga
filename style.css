@@ -1,0 +1,372 @@
+/* ---------------------------------------------------------------------
+   Clima Fusagasugá — estética minimalista, vidrio esmerilado, tipo iOS
+   --------------------------------------------------------------------- */
+
+:root {
+  --bg: #eef1f6;
+  --bg-blob-1: #a8c8ff;
+  --bg-blob-2: #b9f3d0;
+  --bg-blob-3: #ffd9b0;
+
+  --texto-primario: #1c1c1e;
+  --texto-secundario: #6e6e73;
+  --texto-terciario: #8e8e93;
+
+  --vidrio-fondo: rgba(255, 255, 255, 0.55);
+  --vidrio-borde: rgba(255, 255, 255, 0.6);
+  --vidrio-sombra: 0 20px 45px rgba(31, 41, 55, 0.10), 0 2px 8px rgba(31, 41, 55, 0.05);
+
+  --acento-azul: #0a84ff;
+  --acento-verde: #34c759;
+  --acento-naranja: #ff9f0a;
+
+  --segmento-fondo: rgba(118, 118, 128, 0.12);
+
+  --radio-xl: 28px;
+  --radio-l: 22px;
+  --radio-m: 16px;
+
+  --fuente: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+            "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0b0d;
+    --bg-blob-1: #1d3a63;
+    --bg-blob-2: #144433;
+    --bg-blob-3: #5a3a12;
+
+    --texto-primario: #f5f5f7;
+    --texto-secundario: #a1a1a6;
+    --texto-terciario: #8e8e93;
+
+    --vidrio-fondo: rgba(28, 28, 30, 0.55);
+    --vidrio-borde: rgba(255, 255, 255, 0.08);
+    --vidrio-sombra: 0 20px 45px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    --segmento-fondo: rgba(118, 118, 128, 0.24);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--texto-primario);
+  font-family: var(--fuente);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Fondo decorativo: blobs suaves difuminados, muy sutiles */
+.fondo-decorativo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+}
+
+.blob-1 {
+  width: 480px;
+  height: 480px;
+  background: var(--bg-blob-1);
+  top: -160px;
+  left: -120px;
+}
+
+.blob-2 {
+  width: 420px;
+  height: 420px;
+  background: var(--bg-blob-2);
+  top: 240px;
+  right: -140px;
+}
+
+.blob-3 {
+  width: 380px;
+  height: 380px;
+  background: var(--bg-blob-3);
+  bottom: -160px;
+  left: 30%;
+}
+
+.contenedor {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Encabezado */
+.encabezado {
+  padding: 0 4px 8px;
+}
+
+.kicker {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--texto-secundario);
+  text-transform: uppercase;
+}
+
+.encabezado h1 {
+  margin: 0;
+  font-size: clamp(34px, 6vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.subtitulo {
+  margin: 10px 0 0;
+  font-size: 15px;
+  color: var(--texto-secundario);
+}
+
+/* Tarjeta base de vidrio */
+.vidrio {
+  background: var(--vidrio-fondo);
+  border: 1px solid var(--vidrio-borde);
+  border-radius: var(--radio-xl);
+  box-shadow: var(--vidrio-sombra);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+}
+
+.tarjeta {
+  padding: 24px;
+}
+
+/* KPIs */
+.tarjetas-kpi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 22px 20px;
+}
+
+.kpi-etiqueta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-secundario);
+}
+
+.kpi-valor {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.kpi-detalle {
+  font-size: 12.5px;
+  color: var(--texto-terciario);
+  min-height: 16px;
+}
+
+/* Panel de gráfico */
+.panel-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.panel-grafico h2,
+.panel-cultivos h2,
+.panel-modelo h2 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Control segmentado, estilo iOS */
+.segmentado {
+  display: inline-flex;
+  background: var(--segmento-fondo);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.segmento {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--texto-secundario);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.segmento.activo {
+  background: var(--vidrio-fondo);
+  color: var(--texto-primario);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.grafico-envoltura {
+  width: 100%;
+  height: 220px;
+  position: relative;
+}
+
+#grafico {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.leyenda-manual {
+  display: flex;
+  gap: 20px;
+  margin: 16px 4px 0;
+  font-size: 12.5px;
+  color: var(--texto-secundario);
+}
+
+.leyenda-manual span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.punto-historico {
+  background: var(--acento-azul);
+}
+
+.punto-prediccion {
+  background: var(--acento-naranja);
+}
+
+/* Cultivos */
+.lista-cultivos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lista-cultivos li {
+  padding: 14px 16px;
+  border-radius: var(--radio-m);
+  background: rgba(52, 199, 89, 0.10);
+  border: 1px solid rgba(52, 199, 89, 0.18);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--texto-primario);
+  line-height: 1.4;
+}
+
+.lista-cultivos li.cultivo-placeholder {
+  background: var(--segmento-fondo);
+  border-color: transparent;
+  color: var(--texto-secundario);
+}
+
+.lista-cultivos li.cultivo-alerta {
+  background: rgba(255, 159, 10, 0.12);
+  border-color: rgba(255, 159, 10, 0.2);
+}
+
+/* Info del modelo */
+.grid-modelo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.dato-modelo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dato-etiqueta {
+  font-size: 12px;
+  color: var(--texto-terciario);
+  font-weight: 600;
+}
+
+.dato-valor {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--texto-primario);
+}
+
+/* Pie de página */
+.pie {
+  text-align: center;
+  padding: 12px 4px 0;
+}
+
+.pie p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--texto-terciario);
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .contenedor {
+    padding: 40px 16px 36px;
+    gap: 16px;
+  }
+
+  .tarjeta {
+    padding: 20px;
+  }
+
+  .kpi-valor {
+    font-size: 28px;
+  }
+
+  .grid-modelo {
+    grid-template-columns: 1fr;
+  }
+}
