@@ -295,8 +295,9 @@ body {
 .lista-cultivos li {
   padding: 14px 16px;
   border-radius: var(--radio-m);
-  background: rgba(52, 199, 89, 0.10);
-  border: 1px solid rgba(52, 199, 89, 0.18);
+  background: var(--segmento-fondo);
+  border: 1px solid transparent;
+  border-left: 3px solid var(--acento-verde);
   font-size: 14.5px;
   font-weight: 500;
   color: var(--texto-primario);
@@ -304,14 +305,12 @@ body {
 }
 
 .lista-cultivos li.cultivo-placeholder {
-  background: var(--segmento-fondo);
-  border-color: transparent;
+  border-left-color: transparent;
   color: var(--texto-secundario);
 }
 
 .lista-cultivos li.cultivo-alerta {
-  background: rgba(255, 159, 10, 0.12);
-  border-color: rgba(255, 159, 10, 0.2);
+  border-left-color: var(--acento-naranja);
 }
 
 /* Info del modelo */
